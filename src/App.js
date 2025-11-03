@@ -1,5 +1,5 @@
 import React from 'react';
-import { useObservable, Reactive } from '@legendapp/state/react';
+import { useObservable, useSelector } from '@legendapp/state/react';
 import Form from './components/Form/Form';
 import RecommendationList from './components/RecommendationList/RecommendationList';
 
@@ -12,6 +12,9 @@ function App() {
   const handleRecommendationsChange = (newRecommendations) => {
     recommendations$.set(newRecommendations);
   };
+
+  // useSelector torna o componente reativo automaticamente
+  const recommendations = useSelector(() => recommendations$.get());
 
   return (
     <div className="bg-gray-100 min-h-screen flex flex-col justify-center items-center">
@@ -26,9 +29,7 @@ function App() {
           <Form onRecommendationsChange={handleRecommendationsChange} />
         </div>
         <div>
-          <Reactive>
-            {() => <RecommendationList recommendations={recommendations$.get()} />}
-          </Reactive>
+          <RecommendationList recommendations={recommendations} />
         </div>
       </div>
     </div>

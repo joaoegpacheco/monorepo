@@ -9,13 +9,16 @@ import useRecommendations from '../../hooks/useRecommendations';
 
 function Form({ onRecommendationsChange }) {
   const { preferences$, features$, products$ } = useProducts();
-  const { formData, handleChange, isFormValid } = useForm({
+  const { formData, handleChange, isFormValid$ } = useForm({
     selectedPreferences: [],
     selectedFeatures: [],
     selectedRecommendationType: '',
   });
 
   const { getRecommendations } = useRecommendations(products$);
+
+  // Garante que isFormValid$ existe antes de usar
+  const isFormValid = isFormValid$?.get ? isFormValid$.get() : false;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -39,13 +42,13 @@ function Form({ onRecommendationsChange }) {
       onSubmit={handleSubmit}
     >
       <Preferences
-        preferences={preferences$.get()}
+        preferences={preferences$?.get ? preferences$.get() : []}
         onPreferenceChange={(selected) =>
           handleChange('selectedPreferences', selected)
         }
       />
       <Features
-        features={features$.get()}
+        features={features$?.get ? features$.get() : []}
         onFeatureChange={(selected) =>
           handleChange('selectedFeatures', selected)
         }
@@ -55,9 +58,9 @@ function Form({ onRecommendationsChange }) {
           handleChange('selectedRecommendationType', selected)
         }
       />
-      <SubmitButton 
-        text="Obter recomendação" 
-        disabled={!isFormValid.get()} 
+      <SubmitButton
+        text="Obter recomendação"
+        disabled={!isFormValid}
       />
     </form>
   );
