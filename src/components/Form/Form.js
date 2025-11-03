@@ -8,18 +8,24 @@ import useForm from '../../hooks/useForm';
 import useRecommendations from '../../hooks/useRecommendations';
 
 function Form({ onRecommendationsChange }) {
-  const { preferences, features, products } = useProducts();
-  const { formData, handleChange } = useForm({
+  const { preferences$, features$, products$ } = useProducts();
+  const { formData, handleChange, isFormValid } = useForm({
     selectedPreferences: [],
     selectedFeatures: [],
     selectedRecommendationType: '',
   });
 
-  const { getRecommendations } = useRecommendations(products);
+  const { getRecommendations } = useRecommendations(products$);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const dataRecommendations = getRecommendations(formData);
+    // Converte o observable para objeto plano para passar ao serviço
+    const formDataPlain = {
+      selectedPreferences: formData.selectedPreferences.get(),
+      selectedFeatures: formData.selectedFeatures.get(),
+      selectedRecommendationType: formData.selectedRecommendationType.get(),
+    };
+    const dataRecommendations = getRecommendations(formDataPlain);
 
     // Atualiza as recomendações no componente pai
     if (onRecommendationsChange) {
@@ -33,13 +39,13 @@ function Form({ onRecommendationsChange }) {
       onSubmit={handleSubmit}
     >
       <Preferences
-        preferences={preferences}
+        preferences={preferences$.get()}
         onPreferenceChange={(selected) =>
           handleChange('selectedPreferences', selected)
         }
       />
       <Features
-        features={features}
+        features={features$.get()}
         onFeatureChange={(selected) =>
           handleChange('selectedFeatures', selected)
         }
@@ -49,7 +55,10 @@ function Form({ onRecommendationsChange }) {
           handleChange('selectedRecommendationType', selected)
         }
       />
-      <SubmitButton text="Obter recomendação" />
+      <SubmitButton 
+        text="Obter recomendação" 
+        disabled={!isFormValid.get()} 
+      />
     </form>
   );
 }

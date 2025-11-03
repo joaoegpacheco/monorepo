@@ -1,6 +1,7 @@
 // Preferences.js
 
-import React, { useState } from 'react';
+import React from 'react';
+import { useObservable } from '@legendapp/state/react';
 import Checkbox from '../../shared/Checkbox';
 
 function Preferences({
@@ -8,14 +9,15 @@ function Preferences({
   selectedPreferences = [],
   onPreferenceChange,
 }) {
-  const [currentPreferences, setCurrentPreferences] = useState(selectedPreferences)
+  const currentPreferences$ = useObservable(selectedPreferences);
 
   const handlePreferenceChange = (preference) => {
-    const updatedPreferences = currentPreferences.includes(preference)
-      ? currentPreferences.filter((pref) => pref !== preference)
-      : [...currentPreferences, preference];
+    const current = currentPreferences$.get();
+    const updatedPreferences = current.includes(preference)
+      ? current.filter((pref) => pref !== preference)
+      : [...current, preference];
 
-    setCurrentPreferences(updatedPreferences);
+    currentPreferences$.set(updatedPreferences);
     onPreferenceChange(updatedPreferences);
   };
 
@@ -27,7 +29,7 @@ function Preferences({
           <li key={index} className="mb-2">
             <Checkbox
               value={preference}
-              checked={currentPreferences.includes(preference)}
+              checked={currentPreferences$.get().includes(preference)}
               onChange={() => handlePreferenceChange(preference)}
               className="text-blue-500"
             >

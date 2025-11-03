@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useObservable } from '@legendapp/state/react';
+import { Observer } from '@legendapp/state/react';
 import Form from './components/Form/Form';
 import RecommendationList from './components/RecommendationList/RecommendationList';
 
 function App() {
-  const [recommendations, setRecommendations] = useState([]);
+  const recommendations$ = useObservable([]);
 
   /**
    * Atualiza a lista de recomendações quando o formulário é submetido
    */
   const handleRecommendationsChange = (newRecommendations) => {
-    setRecommendations(newRecommendations);
+    recommendations$.set(newRecommendations);
   };
 
   return (
@@ -25,7 +27,9 @@ function App() {
           <Form onRecommendationsChange={handleRecommendationsChange} />
         </div>
         <div>
-          <RecommendationList recommendations={recommendations} />
+          <Observer>
+            {() => <RecommendationList recommendations={recommendations$.get()} />}
+          </Observer>
         </div>
       </div>
     </div>
