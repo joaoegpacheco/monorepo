@@ -1,6 +1,5 @@
 import React from 'react';
-import { useObservable } from '@legendapp/state/react';
-import { Observer } from '@legendapp/state/react';
+import { useObservable, Reactive } from '@legendapp/state/react';
 import Form from './components/Form/Form';
 import RecommendationList from './components/RecommendationList/RecommendationList';
 
@@ -27,9 +26,9 @@ function App() {
           <Form onRecommendationsChange={handleRecommendationsChange} />
         </div>
         <div>
-          <Observer>
+          <Reactive>
             {() => <RecommendationList recommendations={recommendations$.get()} />}
-          </Observer>
+          </Reactive>
         </div>
       </div>
     </div>
