@@ -1,19 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useObservable, useObserve } from '@legendapp/state/react';
 import getProducts from '../services/product.service';
 
 const useProducts = () => {
-  const [preferences, setPreferences] = useState([]);
-  const [features, setFeatures] = useState([]);
-  const [products, setProducts] = useState([]);
+  const preferences$ = useObservable([]);
+  const features$ = useObservable([]);
+  const products$ = useObservable([]);
 
-  useEffect(() => {
+  // useObserve substitui useEffect - executa uma vez na montagem
+  useObserve(() => {
     const fetchData = async () => {
       try {
         const products = await getProducts();
         const allPreferences = [];
         const allFeatures = [];
 
-        setProducts(products);
+        products$.set(products);
 
         products.forEach((product) => {
           const productPreferences = product.preferences
@@ -27,17 +28,21 @@ const useProducts = () => {
           allFeatures.push(...productFeatures);
         });
 
-        setPreferences(allPreferences);
-        setFeatures(allFeatures);
+        preferences$.set(allPreferences);
+        features$.set(allFeatures);
       } catch (error) {
         console.error('Erro ao obter os produtos:', error);
       }
     };
 
     fetchData();
-  }, []);
+  });
 
-  return { preferences, features, products };
+  return { 
+    preferences: preferences$, 
+    features: features$, 
+    products: products$ 
+  };
 };
 
 export default useProducts;
