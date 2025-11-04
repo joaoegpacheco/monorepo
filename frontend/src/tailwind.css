@@ -1,0 +1,16 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Estilos customizados para checkboxes e radio buttons RD Station */
+@layer base {
+  input[type="checkbox"],
+  input[type="radio"] {
+    @apply focus:outline-none focus:ring-0 focus:shadow-none;
+  }
+
+  input[type="checkbox"]:checked,
+  input[type="radio"]:checked {
+    accent-color: #0073E6;
+  }
+}
