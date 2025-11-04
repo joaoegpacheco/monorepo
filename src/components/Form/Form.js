@@ -1,6 +1,7 @@
 // Form.js
 
 import React from 'react';
+import { useSelector } from '@legendapp/state/react';
 import { Preferences, Features, RecommendationType } from './Fields';
 import { SubmitButton } from './SubmitButton';
 import useProducts from '../../hooks/useProducts';
@@ -9,7 +10,7 @@ import useRecommendations from '../../hooks/useRecommendations';
 
 function Form({ onRecommendationsChange }) {
   const { preferences$, features$, products$ } = useProducts();
-  const { formData, handleChange, isFormValid$ } = useForm({
+  const { formData, handleChange } = useForm({
     selectedPreferences: [],
     selectedFeatures: [],
     selectedRecommendationType: '',
@@ -17,8 +18,21 @@ function Form({ onRecommendationsChange }) {
 
   const { getRecommendations } = useRecommendations(products$);
 
-  // Garante que isFormValid$ existe antes de usar
-  const isFormValid = isFormValid$?.get ? isFormValid$.get() : false;
+  // Calcula a validação diretamente usando useSelector para ser reativo
+  const isFormValid = useSelector(() => {
+    const preferences = formData.selectedPreferences.get();
+    const features = formData.selectedFeatures.get();
+    const recommendationType = formData.selectedRecommendationType.get();
+
+    return (
+      (preferences.length > 0 || features.length > 0) &&
+      recommendationType !== ''
+    );
+  });
+
+  // Usa useSelector para tornar o componente reativo aos dados
+  const preferences = useSelector(() => preferences$?.get() || []);
+  const features = useSelector(() => features$?.get() || []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -38,17 +52,17 @@ function Form({ onRecommendationsChange }) {
 
   return (
     <form
-      className="max-w-md mx-auto p-4 bg-white rounded-lg shadow-md"
+      className="w-full p-3 sm:p-4 bg-white rounded-lg shadow-md"
       onSubmit={handleSubmit}
     >
       <Preferences
-        preferences={preferences$?.get ? preferences$.get() : []}
+        preferences={preferences}
         onPreferenceChange={(selected) =>
           handleChange('selectedPreferences', selected)
         }
       />
       <Features
-        features={features$?.get ? features$.get() : []}
+        features={features}
         onFeatureChange={(selected) =>
           handleChange('selectedFeatures', selected)
         }
