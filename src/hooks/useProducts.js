@@ -38,10 +38,10 @@ const useProducts = () => {
     fetchData();
   });
 
-  return { 
-    preferences: preferences$, 
-    features: features$, 
-    products: products$ 
+  return {
+    preferences$: preferences$,
+    features$: features$,
+    products$: products$
   };
 };
 
