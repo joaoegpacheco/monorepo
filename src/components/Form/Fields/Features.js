@@ -1,31 +1,42 @@
 import React from 'react';
-import { useObservable } from '@legendapp/state/react';
+import { useObservable, useSelector } from '@legendapp/state/react';
 import Checkbox from '../../shared/Checkbox';
 
 function Features({ features, selectedFeatures = [], onFeatureChange }) {
-  const currentFeatures$ = useObservable(selectedFeatures);
+  const currentFeatures$ = useObservable(selectedFeatures || []);
 
-  const handleFeatureChange = (feature) => {
+  const handleFeatureChange = (e, feature) => {
+    // Usa o estado checked do evento ao invés do estado atual
+    const isChecked = e.target.checked;
     const current = currentFeatures$.get();
-    const updatedFeatures = current.includes(feature)
-      ? current.filter((pref) => pref !== feature)
-      : [...current, feature];
 
+    const updatedFeatures = isChecked
+      ? [...current.filter((pref) => pref !== feature), feature]
+      : current.filter((pref) => pref !== feature);
+
+    // Atualiza o estado local primeiro
     currentFeatures$.set(updatedFeatures);
-    onFeatureChange(updatedFeatures);
+
+    // Depois notifica o componente pai
+    if (onFeatureChange) {
+      onFeatureChange(updatedFeatures);
+    }
   };
 
+  // Usa useSelector para obter o estado atual de forma reativa
+  const currentFeatures = useSelector(() => currentFeatures$.get());
+
   return (
-    <div className="mb-4">
-      <h2 className="text-lg font-bold mb-2">Funcionalidades:</h2>
-      <ul>
+    <div className="mb-3 sm:mb-4">
+      <h2 className="text-base sm:text-lg font-bold mb-2 sm:mb-3">Funcionalidades:</h2>
+      <ul className="space-y-1 sm:space-y-2">
         {features.map((feature, index) => (
-          <li key={index} className="mb-2">
+          <li key={index}>
             <Checkbox
               value={feature}
-              checked={currentFeatures$.get().includes(feature)}
-              onChange={() => handleFeatureChange(feature)}
-              className="text-green-500"
+              checked={currentFeatures.includes(feature)}
+              onChange={(e) => handleFeatureChange(e, feature)}
+              className="text-primary text-sm sm:text-base"
             >
               {feature}
             </Checkbox>
