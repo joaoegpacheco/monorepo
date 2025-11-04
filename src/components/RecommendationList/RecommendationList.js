@@ -2,14 +2,16 @@ import React from 'react';
 
 function RecommendationList({ recommendations }) {
   return (
-    <div>
-      <h2 className="text-lg font-bold mb-4">Lista de Recomendações:</h2>
+    <div className="p-3 sm:p-4">
+      <h2 className="text-base sm:text-lg font-bold mb-3 sm:mb-4">Lista de Recomendações:</h2>
 
-      {recommendations.length === 0 && <p>Nenhuma recomendação encontrada.</p>}
+      {recommendations.length === 0 && (
+        <p className="text-sm sm:text-base text-gray-600">Nenhuma recomendação encontrada.</p>
+      )}
 
-      <ul>
+      <ul className="space-y-2 sm:space-y-3">
         {recommendations.map((recommendation, index) => (
-          <li key={index} className="mb-2">
+          <li key={index} className="text-sm sm:text-base p-2 sm:p-3 bg-gray-50 rounded border border-gray-200">
             {recommendation.name}
           </li>
         ))}
