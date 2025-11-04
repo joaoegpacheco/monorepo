@@ -69,7 +69,7 @@ Para completar este teste, você deve concentrar-se principalmente em três arqu
 
 ## Como Executar
 
-1. Clone o repositório: `git clone <URL_DO_REPOSITORIO>`
+1. Clone o repositório: `git clone git@github.com:joaoegpacheco/monorepo.git`
 2. Instale as dependências: `yarn install`
 3. Para instalar o projeto, execute o script `./install.sh` 
 4. Inicie a aplicação: `yarn start`
@@ -92,6 +92,74 @@ Para completar este teste, você deve concentrar-se principalmente em três arqu
 7. O serviço deve ser modular e facilmente extensível para futuras atualizações e adições de funcionalidades.
 
 Certifique-se de que todos os critérios de aceite são atendidos durante o desenvolvimento do projeto.
+
+## Melhorias Implementadas
+
+Durante o desenvolvimento do projeto, foram implementadas várias melhorias que vão além dos requisitos básicos do desafio:
+
+### Performance e Gerenciamento de Estado
+
+- **Migração para @legendapp/state**: Todo o gerenciamento de estado foi migrado de `useState` e `useEffect` para `@legendapp/state`, uma biblioteca reativa que oferece até 4x mais performance. Isso inclui:
+  - Substituição de `useState` por `useObservable` para estado reativo
+  - Substituição de `useEffect` por `useObserve` para efeitos colaterais
+  - Uso de `useComputed` para valores derivados e memoizados
+  - Implementação de `useSelector` para renderização reativa e otimizada
+
+### Design Responsivo e Mobile-First
+
+- **Conversão para Mobile-First**: Todo o layout foi convertido de desktop-first para mobile-first utilizando Tailwind CSS, garantindo uma experiência otimizada em dispositivos móveis:
+  - Breakpoints responsivos (`sm:`, `md:`, `lg:`) aplicados em todos os componentes
+  - Espaçamentos e tamanhos de fonte adaptativos
+  - Layout em grid que se adapta de coluna única (mobile) para múltiplas colunas (desktop)
+
+### Identidade Visual da RD Station
+
+- **Branding RD Station**: Aplicação das cores oficiais da marca RD Station em todos os componentes:
+  - Cor principal (#0073E6) aplicada em botões, checkboxes e radio buttons selecionados
+  - Cores secundárias (light e dark) para estados hover e active
+  - Remoção de focus outlines para uma experiência visual mais limpa
+  - Background branco em checkboxes e radio buttons não selecionados para melhor legibilidade
+
+### Correções e Melhorias de UX
+
+- **Correção de Bugs Críticos**:
+  - Resolvido problema de checkboxes não clicáveis através de melhorias no componente `Checkbox`
+  - Corrigida validação do formulário que não estava habilitando o botão corretamente
+  - Implementada sincronização reativa entre componentes para garantir que os dados sejam exibidos corretamente
+
+- **Melhorias de Acessibilidade**:
+  - Labels adequados para todos os inputs
+  - Área de clique expandida para melhor usabilidade
+  - Feedback visual em estados hover e active
+
+### Qualidade de Código
+
+- **Testes Unitários**: Adicionados 10 novos casos de teste para cobrir cenários edge cases e garantir robustez do serviço de recomendação
+- **Organização e Estrutura**: Código organizado seguindo princípios de Clean Code
+- **Commits Padronizados**: Todos os commits seguem o padrão Conventional Commits para melhor rastreabilidade
+
+### Arquivos Modificados
+
+Os seguintes arquivos foram modificados ou criados durante as melhorias:
+
+**Hooks:**
+- `src/hooks/useProducts.js` - Migrado para `@legendapp/state`
+- `src/hooks/useForm.js` - Implementado com `useObservable` e `useComputed`
+- `src/hooks/useRecommendations.js` - Otimizado para trabalhar com observables
+
+**Componentes:**
+- `src/App.js` - Migrado para estado reativo e design mobile-first
+- `src/components/Form/Form.js` - Reatividade completa e validação corrigida
+- `src/components/Form/Fields/Preferences.js` - Estado reativo e cores RD Station
+- `src/components/Form/Fields/Features.js` - Estado reativo e cores RD Station
+- `src/components/Form/Fields/RecommendationType.js` - Radio buttons nativos com cores RD Station
+- `src/components/shared/Checkbox.js` - Melhorias de usabilidade e estilização
+- `src/components/Form/SubmitButton/SubmitButton.js` - Cores RD Station e design mobile-first
+- `src/components/RecommendationList/RecommendationList.js` - Design mobile-first
+
+**Estilos e Configuração:**
+- `tailwind.config.js` - Adicionadas cores da marca RD Station
+- `src/tailwind.css` - Estilos customizados para inputs sem focus outline
 
 ## Autor
 
